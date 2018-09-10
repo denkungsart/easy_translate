@@ -36,6 +36,9 @@ module EasyTranslate
         raw_translation = res['translatedText']
         CGI.unescapeHTML(raw_translation)
       end
+    rescue EasyTranslateException
+      # In case we run into an exception from Google translate, don't discard all translated values, but return empty translations.
+      [""] * texts.size
     end
 
     # A convenience class for wrapping a translation request
