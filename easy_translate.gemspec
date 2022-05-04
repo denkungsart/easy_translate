@@ -3,6 +3,7 @@ require File.expand_path('lib/easy_translate/version', File.dirname(__FILE__))
 spec = Gem::Specification.new do |s|
   s.name = 'easy_translate'
   s.author = 'John Crepezzi'
+  s.add_dependency('google-cloud-translate-v3')
   s.add_development_dependency('rspec')
   s.add_dependency 'thread'
   s.add_dependency 'thread_safe'
