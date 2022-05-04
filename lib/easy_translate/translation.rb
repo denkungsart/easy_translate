@@ -2,6 +2,7 @@ require 'json'
 require 'cgi'
 require 'easy_translate/request'
 require 'easy_translate/threadable'
+require 'google/cloud/translate/v3'
 
 module EasyTranslate
 
@@ -17,7 +18,11 @@ module EasyTranslate
     # @option options [Boolean] :html - Whether or not the supplied string is HTML (optional)
     # @return [String, Array] Translated text or texts
     def translate(texts, options = {}, http_options = {})
-      threaded_process(:request_translations, texts, options, http_options)
+      if ENV["GOOGLE_GLOSSARY_ID"].present?
+        threaded_process(:request_glossary_translations, texts, options, http_options)
+      else
+        threaded_process(:request_translations, texts, options, http_options)
+      end
     end
 
     private
@@ -38,6 +43,16 @@ module EasyTranslate
       end
     rescue EasyTranslateException
       # In case we run into an exception from Google translate, don't discard all translated values, but return empty translations.
+      [""] * texts.size
+    end
+
+    def request_glossary_translations(texts, options = {}, http_options = {})
+      request = GlossaryTranslationRequest.new(texts, options, http_options)
+      result = request.perform_raw
+      result.glossary_translations.map do |res|
+        CGI.unescapeHTML(res.translated_text)
+      end
+    rescue EasyTranslateException
       [""] * texts.size
     end
 
@@ -124,9 +139,25 @@ module EasyTranslate
           @texts = texts
         end
       end
-
     end
 
+    class GlossaryTranslationRequest < TranslationRequest
+      def perform_raw
+        glossary_config = ::Google::Cloud::Translate::V3::TranslateTextGlossaryConfig.new(
+          glossary: "#{ENV['GOOGLE_PARENT_PATH']}/glossaries/#{ENV['GOOGLE_GLOSSARY_ID']}",
+          ignore_case: true
+        )
+        client = ::Google::Cloud::Translate::V3::TranslationService::Client.new do |config|
+          config.credentials = JSON.parse(File.read(ENV["GOOGLE_SERVICE_ACCOUNT_FILE"]))
+        end
+        client.translate_text(
+          contents: @texts,
+          parent: ENV["GOOGLE_PARENT_PATH"],
+          source_language_code: params[:source] || "en",
+          target_language_code: params[:target],
+          glossary_config: glossary_config
+        )
+      end
+    end
   end
-
 end
