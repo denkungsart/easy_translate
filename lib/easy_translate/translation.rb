@@ -21,7 +21,7 @@ module EasyTranslate
       if ENV["GOOGLE_GLOSSARY_ID"].present?
         threaded_process(:request_glossary_translations, texts, options, http_options)
       else
-        threaded_process(:request_translations, texts, options, http_options)
+        raise "Please define a GOOGLE_GLOSSARY_ID in your .env.development when using this branch"
       end
     end
 
