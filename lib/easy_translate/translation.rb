@@ -160,7 +160,7 @@ module EasyTranslate
             project: ENV["GOOGLE_PROJECT_ID"],
             location: ENV["GOOGLE_LOCATION"]
           ),
-          source_language_code: params[:source] || "en",
+          source_language_code: params[:source],
           target_language_code: params[:target],
           glossary_config: glossary_config
         )
