@@ -29,6 +29,9 @@ module EasyTranslate
     # @option options [Boolean] :html - Whether or not the supplied string is HTML (optional)
     # @return [String, Array] Translated text or texts
     def request_translations(texts, options = {}, http_options = {})
+      # Don't translate at all, just return the input
+      return texts
+
       request = TranslationRequest.new(texts, options, http_options)
       # Turn the response into an array of translations
       raw = request.perform_raw
