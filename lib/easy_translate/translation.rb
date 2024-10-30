@@ -164,6 +164,9 @@ module EasyTranslate
           target_language_code: params[:target],
           glossary_config: glossary_config
         )
+      rescue Google::Cloud::InvalidArgumentError => e
+        warn "Error: #{e.message}"
+        raise EasyTranslateException
       end
     end
   end
