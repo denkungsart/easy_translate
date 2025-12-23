@@ -99,9 +99,9 @@ module EasyTranslate
       end
 
       # The body for the request
-      # @return [String] the body for the request, URL escaped
+      # @return [String] the body for the request
       def body
-        @texts.map { |t| "q=#{CGI::escape(t)}" }.join '&'
+        JSON.generate({ q: @texts })
       end
 
       # Whether or not this was a request for multiple texts

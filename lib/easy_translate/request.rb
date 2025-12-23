@@ -36,20 +36,22 @@ module EasyTranslate
     # Perform the given request
     # @return [String] The response String
     def perform_raw
-      # Construct the request
-      request = Net::HTTP::Post.new(uri.request_uri)
-      request.add_field('X-HTTP-Method-Override', 'GET')
+      request = Net::HTTP::Post.new(uri.request_uri, { 'Content-Type' => 'application/json' })
       request.body = body
-      # Fire and return
       response = http.request(request)
-      unless response.code == '200'
-        err = JSON.parse(response.body)['error']['errors'].first['message']
-        raise EasyTranslateException.new(err)
-      end
+      raise_exception(response) unless response.code == '200'
       response.body
     end
 
     private
+
+    def raise_exception(response)
+      err = JSON.parse(response.body)['error']['errors'].first['message']
+    rescue JSON::ParserError => _e
+      err = "#{response.code} - #{response.message}"
+    ensure
+      raise EasyTranslateException.new(err)
+    end
 
     def uri
       @uri ||= URI.parse("https://translation.googleapis.com#{path}?#{param_s}")

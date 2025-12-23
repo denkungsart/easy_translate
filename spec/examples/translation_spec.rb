@@ -29,6 +29,19 @@ describe EasyTranslate::Translation do
     expect(trans).to eq(%{Hallo ' & " Welt})
   end
 
+  context 'detecting availale language' do
+    before :each do
+      pending 'please provide an API_KEY for this suite' if ENV['API_KEY'].nil?
+
+      EasyTranslate.api_key = ENV['API_KEY']
+    end
+
+    it 'should detect simplified chinese as zh-CN' do
+      expect(EasyTranslate.translations_available.include?('zh-CN')).to eq(true)
+      expect(EasyTranslate.translations_available.include?('zh')).to eq(true)
+    end
+  end
+
   def fake_request(hash)
     expect(EasyTranslate::Translation::TranslationRequest).to receive(:new).and_return(OpenStruct.new(hash))
   end
@@ -37,7 +50,7 @@ describe EasyTranslate::Translation do
   describe klass do
 
     describe :path do
-      
+
       it 'should have a valid path' do
         request = klass.new('abc', :to => 'en')
         expect(request.path).not_to be_empty
@@ -164,20 +177,16 @@ describe EasyTranslate::Translation do
     end
 
     describe :body do
-
-      it 'should insert the texts into the body' do
+      it 'should insert the texts into a JSON-encoded body' do
         request = klass.new(['abc', 'def'], :to => 'es')
-        expect(request.body).to eq('q=abc&q=def')
+        parsed_payload = JSON.parse(request.body)
+        expect(parsed_payload).to eq( { 'q' => ['abc', 'def'] } )
       end
 
-      it 'should insert the text into the body' do
+      it 'should insert the text into a JSON-encoded body' do
         request = klass.new('abc', :to => 'es')
-        expect(request.body).to eq('q=abc')
-      end
-
-      it 'should URI escape the body' do
-        request = klass.new('%', :to => 'es')
-        expect(request.body).to eq('q=%25')
+        parsed_payload = JSON.parse(request.body)
+        expect(parsed_payload).to eq( { 'q' => ['abc'] } )
       end
 
     end

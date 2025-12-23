@@ -1,9 +1,11 @@
 ## EasyTranslate
 
-[![Build Status](https://secure.travis-ci.org/seejohnrun/easy_translate.png)](http://travis-ci.org/seejohnrun/easy_translate)
+<a href='https://github.com/seejohnrun/easy_translate/actions' target='_blank'><img src="https://github.com/seejohnrun/easy_translate/workflows/Test/badge.svg" style="max-width:100%;" height='21' style='border:0px;height:21px;' border='0' alt="CI Status"></a>
 
 This is a Ruby library for Google Translate that makes working with bulk calls,
 user_ips and access via API Key easy.
+
+Unlike the official google client, `easy_translate` does not have a dependency on the `grpc` gem. This can be an advantage because `grpc` may be difficult to install on some systems or configurations.
 
 ---
 
@@ -25,25 +27,25 @@ gem 'easy_translate'
 
 ```ruby
 # auto-detect
-EasyTranslate.translate('Hello, world', :to => :spanish) # => "Hola, mundo"
-EasyTranslate.translate('Hello, world', :to => 'es') # => "Hola, mundo"
+EasyTranslate.translate('Hello, world', to: :spanish) # => "Hola, mundo"
+EasyTranslate.translate('Hello, world', to: 'es') # => "Hola, mundo"
 
 # feel free to specify explicitly
-EasyTranslate.translate('Hola, mundo', :from => :spanish, :to => :en) # => "Hello, world"
+EasyTranslate.translate('Hola, mundo', from: :spanish, to: :en) # => "Hello, world"
 ```
 
 ## Batch translation (Yay!)
 
 ```ruby
 # multiple strings
-EasyTranslate.translate(['Hello', 'Goodbye'], :to => :spanish) # => ["¡Hola", "Despedida"]
+EasyTranslate.translate(['Hello', 'Goodbye'], to: :spanish) # => ["¡Hola", "Despedida"]
 ```
 
 ## API Keys
 
 ```ruby
 # make google happy - (NOTE: use these anywhere)
-EasyTranslate.translate('Hello, world', :to => :es, :key => 'xxx')
+EasyTranslate.translate('Hello, world', to: :es, key: 'xxx')
 
 # don't want to set the key on every call? ** Me either! **
 EasyTranslate.api_key = 'xxx'
@@ -67,12 +69,12 @@ EasyTranslate.detect ['Hello World', '我姓譚'] # => ['en', 'zh-CN']
 
 ```ruby
 # detect language with confidence
-EasyTranslate.detect "This is definitely English!", :confidence => true # => { :language => 'en', :confidence => 0.77272725 }
+EasyTranslate.detect "This is definitely English!", confidence: true # => { :language => 'en', :confidence => 0.77272725 }
 ```
 
 ```ruby
 # detect batch languages with confidence
-EasyTranslate.detect ['This is definitely English!', '我姓譚'], :confidence => true # => [{ :language => 'en', :confidence => 0.77272725 }, { :language => 'zh-CN', :confidence => 1.0 }]
+EasyTranslate.detect ['This is definitely English!', '我姓譚'], confidence: true # => [{ :language => 'en', :confidence => 0.77272725 }, { :language => 'zh-CN', :confidence => 1.0 }]
 ```
 
 ## Explicitly select translation model (NMT, PBMT)
@@ -93,9 +95,9 @@ See https://research.googleblog.com/2016/09/a-neural-network-for-machine.html fo
 ## Google Translate supports HTML (default) and plain text formats
 
 ```ruby
-EasyTranslate.translate "Las doce en punto", :format => 'text', :to => :en
+EasyTranslate.translate "Las doce en punto", format: 'text', to: :en
 # => "Twelve o'clock"
-EasyTranslate.translate "Las doce <b>en punto</b>", :format => 'html', :to => :en
+EasyTranslate.translate "Las doce <b>en punto</b>", format: 'html', to: :en
 # => "Twelve <b>o&#39;clock</b>"
 ```
 
@@ -152,7 +154,7 @@ https://github.com/seejohnrun/easy_translate/contributors
 
 (The MIT License)
 
-Copyright © 2010-2011 John Crepezzi
+Copyright © 2010-2018 John Crepezzi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the ‘Software’), to deal in

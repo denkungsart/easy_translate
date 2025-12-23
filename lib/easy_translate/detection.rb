@@ -21,8 +21,8 @@ module EasyTranslate
       request = DetectionRequest.new(texts, options, http_options)
       raw = request.perform_raw
       detections = JSON.parse(raw)['data']['detections'].map do |res|
-        res.empty? ? nil : 
-          options[:confidence] ? 
+        res.empty? ? nil :
+          options[:confidence] ?
             { :language => res.first['language'], :confidence => res.first['confidence'] } : res.first['language']
       end
     end
@@ -56,9 +56,9 @@ module EasyTranslate
       end
 
       # The body for the request
-      # @return [String] the body for the request, URL escaped
+      # @return [String] the body for the request
       def body
-        @texts.map { |t| "q=#{CGI::escape(t)}" }.join '&'
+        JSON.generate({ q: @texts })
       end
 
       # Whether or not this was a request for multiple texts

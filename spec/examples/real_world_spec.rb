@@ -12,20 +12,19 @@ describe EasyTranslate do
   end
 
   describe :translate do
-
     it 'should be able to translate one' do
       res = EasyTranslate.translate 'hello world', :to => :spanish
       expect(res).to eq('Hola Mundo')
     end
 
     it 'should be able to translate multiple' do
-      res = EasyTranslate.translate ['hello world', 'i love you'], :to => :spanish
-      expect(res).to eq(['Hola Mundo', 'te amo'])
+      res = EasyTranslate.translate ['hello world', 'good afternoon'], :to => :spanish
+      expect(res).to eq(['Hola Mundo', 'buenas tardes'])
     end
 
     it 'should work concurrently' do
-      res = EasyTranslate.translate ['hello world', 'i love you', 'good morning'], :to => :spanish, :concurrency => 2, :batch_size => 1
-      expect(res).to eq(['Hola Mundo', 'te amo', 'Buenos días'])
+      res = EasyTranslate.translate ['hello world', 'good afternoon', 'i can translate text'], :to => :spanish, :concurrency => 2, :batch_size => 1
+      expect(res).to eq(['Hola Mundo', 'buenas tardes', 'Puedo traducir texto'])
     end
   end
 

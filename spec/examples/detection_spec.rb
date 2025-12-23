@@ -53,22 +53,17 @@ describe EasyTranslate::Detection do
     end
 
     describe :body do
-
-      it 'should insert the texts into the body' do
+      it 'should insert the texts into a JSON-encoded body' do
         request = klass.new(['abc', 'def'])
-        expect(request.body).to eq('q=abc&q=def')
+        parsed_payload = JSON.parse(request.body)
+        expect(parsed_payload).to eq({ 'q' => ['abc', 'def'] })
       end
 
-      it 'should insert the text into the body' do
+      it 'should insert the text into a JSON-encoded body' do
         request = klass.new('abc')
-        expect(request.body).to eq('q=abc')
+        parsed_payload = JSON.parse(request.body)
+        expect(parsed_payload).to eq({ 'q' => ['abc'] })
       end
-
-      it 'should URI escape the body' do
-        request = klass.new('%')
-        expect(request.body).to eq('q=%25')
-      end
-
     end
 
     describe :params do
