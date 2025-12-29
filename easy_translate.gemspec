@@ -11,7 +11,6 @@ spec = Gem::Specification.new do |s|
   s.description = 'easy_translate is a wrapper for the google translate API that makes sense programatically, and implements API keys'
   s.email = 'john.crepezzi@gmail.com'
   s.files = Dir['lib/**/*.rb']
-  s.has_rdoc = true
   s.homepage = 'https://github.com/seejohnrun/easy_translate'
   s.platform = Gem::Platform::RUBY
   s.require_paths = ['lib']
