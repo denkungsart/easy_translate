@@ -52,7 +52,7 @@ module EasyTranslate
       result.glossary_translations.map do |res|
         CGI.unescapeHTML(res.translated_text)
       end
-    rescue EasyTranslateException
+    rescue EasyTranslateException, Google::Cloud::InvalidArgumentError
       [""] * texts.size
     end
 
